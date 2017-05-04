@@ -23,6 +23,21 @@ function storeInventory() {
             console.log("Product Id: " + res[i].item_id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price);
             console.log("==============================================================");
         }
+        prompt.start();
+
+        prompt.get([{
+        	message: "Please enter the id of the product you want to purchase: ",
+            name: "product_id",
+            required: true
+        }, {
+        	message: "Please enter how many you would like to purchase: ",
+            name: "amount",
+            required: true
+        }], function(err, result) {
+            console.log("Product Id: " + result.product_id);
+            console.log("Amount: " + result.amount);
+            
+        });
     });
 }
 
