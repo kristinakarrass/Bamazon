@@ -24,7 +24,7 @@ function start() {
     }]).then(function(answer) {
         if (answer.action === "for sale") {
         	console.log("for sale");
-            // forSale();
+            forSale();
         } else if (answer.action === "low inventory") {
         	console.log("low inventory");
             // lowInventory();
@@ -41,7 +41,9 @@ function start() {
 start();
 
 function forSale() {
-
+	connection.query("SELECT * FROM products WHERE stock_quantity != 0", function(err, res) {
+		console.log(res);
+	})
 }
 
 function lowInventory() {

@@ -20,7 +20,7 @@ connection.connect(function(err) {
     console.log("connection as id " + connection.threadId);
 });
 
-function storeInventory() {
+function start() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         console.log("==============================================================");
@@ -48,18 +48,38 @@ function storeInventory() {
             	item = res[0].product_name;
                 price = res[0].price;
                 stock = parseInt(res[0].stock_quantity);
-                if (stock > amount) {
+                if (stock >= amount) {
                     newStock = stock - amount;
                     price = price * amount;
                         connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newStock }, { item_id: prodId }], function(err, res) {
                             console.log("You were charged $" + price + " for " + amount + " " + item + ".");
+                            startOver();
                         })
                 } else {
                     console.log("Sorry, we do not have sufficient stock in our inventory.");
+                    startOver();
                 }
             })
         });
     });
 }
 
-storeInventory();
+function startOver() {
+	prompt.start();
+
+        prompt.get([{
+            message: "Would you like to purchase another product? y/n ",
+            name: "answer",
+            required: true
+        }], function(err, result) {
+        	// console.log(result.answer);
+		if (result.answer === "y") {
+			start();
+		} else {
+			console.log("Have a great day and see you again soon!");
+			return;
+		}
+	})
+}
+start();
+
