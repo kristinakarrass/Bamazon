@@ -1,5 +1,11 @@
 var mysql = require("mysql");
 var prompt = require("prompt");
+var stock = 0;
+var newStock = 0;
+var amount = 0;
+var prodId = 0;
+var price = 0;
+var item = "";
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -26,17 +32,32 @@ function storeInventory() {
         prompt.start();
 
         prompt.get([{
-        	message: "Please enter the id of the product you want to purchase: ",
+            message: "Please enter the id of the product you want to purchase: ",
             name: "product_id",
             required: true
         }, {
-        	message: "Please enter how many you would like to purchase: ",
+            message: "Please enter how many units you would like to purchase: ",
             name: "amount",
             required: true
         }], function(err, result) {
-            console.log("Product Id: " + result.product_id);
-            console.log("Amount: " + result.amount);
-            
+            prodId = result.product_id;
+            amount = result.amount;
+            console.log("Product Id: " + prodId);
+            console.log("Amount: " + amount);
+            connection.query("SELECT * FROM products WHERE item_id=" + prodId, function(err, res) {
+            	item = res[0].product_name;
+                price = res[0].price;
+                stock = parseInt(res[0].stock_quantity);
+                if (stock > amount) {
+                    newStock = stock - amount;
+                    price = price * amount;
+                        connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newStock }, { item_id: prodId }], function(err, res) {
+                            console.log("You were charged $" + price + " for " + amount + " " + item + ".");
+                        })
+                } else {
+                    console.log("Sorry, we do not have sufficient stock in our inventory.");
+                }
+            })
         });
     });
 }
