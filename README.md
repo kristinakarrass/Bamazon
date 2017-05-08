@@ -13,7 +13,13 @@ Should there be insufficient stock of a product, the customer will be alerted, t
 
 ![Second Customer Screenshot](customerscreenshot2.png?raw=true "purchase failed")
 
+## Bamazon Manager
 
+This part of the app lets the store manager check all products for sale, products with low stock, she can add to stock of existing products on inventory, or add new products to the store inventory. The inventory list displays the unique product ID, product name, the department the product is stocked in, its price and how many items are in stock.
 
+### See items for sale
 
+The manager will be prompted to enter a number in order to choose from a list. She will then see all items the store offers, with low stocks displayed in red, sufficient stock in green.
+
+![First Manager Screenshot](managerscreenshot1.png?raw=true "products for sale")
 
