@@ -1,6 +1,7 @@
 var mysql = require("mysql");
 var prompt = require("prompt");
 var inquirer = require("inquirer");
+var colors = require("colors");
 var Table = require("cli-table2");
 //create layout for cli table
 var table = new Table({
@@ -16,6 +17,7 @@ var product = "";
 var price = 0;
 var department = "";
 
+//=================================================================================================
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -28,7 +30,7 @@ connection.connect(function(err) {
     if (err) throw err;
     start();
 });
-
+//==================================================================================================
 function start() {
     //ask manager what he wants to do
     inquirer.prompt([{
@@ -59,11 +61,11 @@ function start() {
 
 function forSale() {
     connection.query("SELECT * FROM products WHERE stock_quantity != 0", function(err, res) {
-    		table.push(["Item ID", "Product Name", "Price", "Stock Quantity"]);
+    		table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
         for (var i = 0; i < res.length; i++) {
             table.push([ res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
         }
-        console.log("------------------------  ITEMS CURRENTLY IN STOCK  ---------------------------");
+        console.log("                           ITEMS CURRENTLY IN STOCK");
         console.log(table.toString());
         start();
     });
@@ -72,7 +74,7 @@ function forSale() {
 function lowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
         console.log("            Items currently low in stock (<5)");
-        table.push(["Item ID", "Product Name", "Price", "Stock Quantity"]);
+        table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity.yellow"]);
         for (var i = 0; i < res.length; i++) {
             table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
         }
@@ -84,9 +86,10 @@ function lowInventory() {
 function addInventory() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
-        console.log("==============================================================");
-        //print all available products in the store
+        //print all available products in the store for manager to see
+        table.push("Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow);
         for (var i = 0; i < res.length; i++) {
+
             console.log("Product Id: " + res[i].item_id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price);
             console.log("==============================================================");
         }

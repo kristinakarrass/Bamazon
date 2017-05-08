@@ -1,5 +1,6 @@
 var mysql = require("mysql");
 var prompt = require("prompt");
+var colors = require("colors");
 var Table = require("cli-table2");
 //create layout for cli table
 var table = new Table({
@@ -32,10 +33,10 @@ function start() {
     //get information from database
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
-        table.push(['Item Id', 'Product', 'Price']);
+        table.push(['Item Id'.yellow, 'Product'.yellow, 'Price'.yellow]);
         //print all available products in the store
         for (var i = 0; i < res.length; i++) {
-        	table.push([res[i].item_id, res[i].product_name, res[i].price]);
+        	table.push([colors.cyan(res[i].item_id), res[i].product_name, colors.green(res[i].price)]);
         }
         console.log(table.toString());
         //prompt user for input
@@ -70,7 +71,7 @@ function start() {
                         startOver();
                     })
                 } else {
-                    console.log("Sorry, we do not have sufficient stock in our inventory.");
+                    console.log("Sorry, we do not have sufficient stock in our inventory.".red);
                     //check if user wants to purchase another product
                     startOver();
                 }
