@@ -2,26 +2,6 @@ var mysql = require("mysql");
 var prompt = require("prompt");
 var colors = require("colors");
 var Table = require("cli-table2");
-//create layout for cli table
-var table = new Table({
-    chars: {
-        'top': '═',
-        'top-mid': '╤',
-        'top-left': '╔',
-        'top-right': '╗',
-        'bottom': '═',
-        'bottom-mid': '╧',
-        'bottom-left': '╚',
-        'bottom-right': '╝',
-        'left': '║',
-        'left-mid': '╟',
-        'mid': '─',
-        'mid-mid': '┼',
-        'right': '║',
-        'right-mid': '╢',
-        'middle': '│'
-    }
-});
 
 var productID = 0;
 var amount = 0;
@@ -73,6 +53,27 @@ function forSale() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         //print all available products in the store for manager to see
+        console.log("\n\n                                Items for Sale");
+        //create layout for cli table
+        var table = new Table({
+            chars: {
+                'top': '═',
+                'top-mid': '╤',
+                'top-left': '╔',
+                'top-right': '╗',
+                'bottom': '═',
+                'bottom-mid': '╧',
+                'bottom-left': '╚',
+                'bottom-right': '╝',
+                'left': '║',
+                'left-mid': '╟',
+                'mid': '─',
+                'mid-mid': '┼',
+                'right': '║',
+                'right-mid': '╢',
+                'middle': '│'
+            }
+        });
         table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
         for (var i = 0; i < res.length; i++) {
             //mark stock quantity red for low stock and green for high stock
@@ -89,7 +90,27 @@ function forSale() {
 
 function lowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
-        console.log("            Items currently low in stock (<5)");
+        console.log("\n\n            Items currently low in stock (<5)");
+        //create layout for cli table
+        var table = new Table({
+            chars: {
+                'top': '═',
+                'top-mid': '╤',
+                'top-left': '╔',
+                'top-right': '╗',
+                'bottom': '═',
+                'bottom-mid': '╧',
+                'bottom-left': '╚',
+                'bottom-right': '╝',
+                'left': '║',
+                'left-mid': '╟',
+                'mid': '─',
+                'mid-mid': '┼',
+                'right': '║',
+                'right-mid': '╢',
+                'middle': '│'
+            }
+        });
         table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity.yellow"]);
         for (var i = 0; i < res.length; i++) {
             table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
@@ -102,17 +123,6 @@ function lowInventory() {
 function addInventory() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
-        //print all available products in the store for manager to see
-        table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
-        for (var i = 0; i < res.length; i++) {
-            //mark stock quantity red for low stock and green for high stock
-            if (res[i].stock_quantity < 5) {
-                table.push([colors.cyan(res[i].item_id), colors.yellow(res[i].product_name), colors.yellow(res[i].price), colors.red(res[i].stock_quantity)]);
-            } else {
-                table.push([colors.cyan(res[i].item_id), colors.yellow(res[i].product_name), colors.yellow(res[i].price), colors.green(res[i].stock_quantity)]);
-            }
-        }
-        console.log(table.toString());
         //ask which items manager wants to add to
         prompt.start();
 

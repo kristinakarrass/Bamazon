@@ -27,3 +27,10 @@ She will then be able to choose from the same menu to see only items with low st
 
 ![Second Manager Screenshot](managerscreenshot2.png?raw=true "low stock inventory")
 
+She can then choose to add to existing inventory.
+
+![Third Manager Screenshot](managerscreenshot3.png?raw=true "add to inventory")
+
+She can also add new items to the inventory.
+
+![Fourth Manager Screenshot](managerscreenshot4.png?raw=true "add new item to inventory")
