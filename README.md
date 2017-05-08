@@ -40,3 +40,15 @@ She can then choose to add to existing inventory.
 She can also add new items to the inventory.
 
 ![Fourth Manager Screenshot](managerscreenshot4.png?raw=true "add new item to inventory")
+
+
+
+### Technologies used
+		
+* node.js
+* MySQL
+* npm packages
+		* prompt
+		* mysql
+		* cli-table2
+		* colors
