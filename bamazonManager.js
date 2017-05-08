@@ -1,6 +1,14 @@
 var mysql = require("mysql");
 var prompt = require("prompt");
 var inquirer = require("inquirer");
+var Table = require("cli-table2");
+//create layout for cli table
+var table = new Table({
+  chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+});
 
 var productID = 0;
 var amount = 0;
@@ -51,26 +59,24 @@ function start() {
 
 function forSale() {
     connection.query("SELECT * FROM products WHERE stock_quantity != 0", function(err, res) {
-        console.log("======================================================================");
-        console.log("            Items currently in stock");
-        console.log("======================================================================");
+    		table.push(["Item ID", "Product Name", "Price", "Stock Quantity"]);
         for (var i = 0; i < res.length; i++) {
-            console.log("Item ID: " + res[i].item_id + "\nProduct: " + res[i].product_name + "\nPrice: " + res[i].price + "\nQuantity: " + res[i].stock_quantity);
-            console.log("======================================================================");
+            table.push([ res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
         }
+        console.log("------------------------  ITEMS CURRENTLY IN STOCK  ---------------------------");
+        console.log(table.toString());
         start();
     });
 }
 
 function lowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
-        console.log("\n======================================================================");
         console.log("            Items currently low in stock (<5)");
-        console.log("======================================================================");
+        table.push(["Item ID", "Product Name", "Price", "Stock Quantity"]);
         for (var i = 0; i < res.length; i++) {
-            console.log("Item ID: " + res[i].item_id + "\nProduct: " + res[i].product_name + "\nPrice: " + res[i].price + "\nQuantity: " + res[i].stock_quantity);
-            console.log("======================================================================");
+            table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
         }
+        console.log(table.toString());
         start();
     });
 }
