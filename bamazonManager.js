@@ -1,14 +1,26 @@
 var mysql = require("mysql");
 var prompt = require("prompt");
-var inquirer = require("inquirer");
 var colors = require("colors");
 var Table = require("cli-table2");
 //create layout for cli table
 var table = new Table({
-  chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
-         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
-         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
-         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+    chars: {
+        'top': '═',
+        'top-mid': '╤',
+        'top-left': '╔',
+        'top-right': '╗',
+        'bottom': '═',
+        'bottom-mid': '╧',
+        'bottom-left': '╚',
+        'bottom-right': '╝',
+        'left': '║',
+        'left-mid': '╟',
+        'mid': '─',
+        'mid-mid': '┼',
+        'right': '║',
+        'right-mid': '╢',
+        'middle': '│'
+    }
 });
 
 var productID = 0;
@@ -31,24 +43,26 @@ connection.connect(function(err) {
     start();
 });
 //==================================================================================================
+
 function start() {
     //ask manager what he wants to do
-    inquirer.prompt([{
-        type: "list",
+    prompt.start();
+
+    prompt.get([{
+        message: "Would you like to...\n1. View products for sale?\n2. View products with low inventory?\n3. Add to existing inventory?\n4. Add a new product to inventory?",
         name: "action",
-        message: "Would you like to view products for sale, view low inventory, add to inventory or add a new product?",
-        choices: ["for sale", "low inventory", "add to inventory", "add product"]
-    }]).then(function(answer) {
+        required: true
+    }], function(err, answer) {
         //logs all items that are available (stock greater than 0)
-        if (answer.action === "for sale") {
+        if (answer.action === "1") {
             console.log("for sale");
             forSale();
             //logs all items with low inventory (smaller than 5)
-        } else if (answer.action === "low inventory") {
+        } else if (answer.action === "2") {
             console.log("low inventory");
             lowInventory();
             //lets manager add inventory to any item in store
-        } else if (answer.action === "add to inventory") {
+        } else if (answer.action === "3") {
             console.log("add to inventory");
             addInventory();
             //lets manager add products to store inventory
@@ -61,9 +75,9 @@ function start() {
 
 function forSale() {
     connection.query("SELECT * FROM products WHERE stock_quantity != 0", function(err, res) {
-    		table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
+        table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
         for (var i = 0; i < res.length; i++) {
-            table.push([ res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
+            table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
         }
         console.log("                           ITEMS CURRENTLY IN STOCK");
         console.log(table.toString());
@@ -87,24 +101,28 @@ function addInventory() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         //print all available products in the store for manager to see
-        table.push("Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow);
+        table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
         for (var i = 0; i < res.length; i++) {
-
-            console.log("Product Id: " + res[i].item_id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price);
-            console.log("==============================================================");
+            //mark stock quantity red for low stock and green for high stock
+            if (res[i].stock_quantity < 5) {
+                table.push([colors.cyan(res[i].item_id), colors.yellow(res[i].product_name), colors.yellow(res[i].price), colors.red(res[i].stock_quantity)]);
+            } else {
+                table.push([colors.cyan(res[i].item_id), colors.yellow(res[i].product_name), colors.yellow(res[i].price), colors.green(res[i].stock_quantity)]);
+            }
         }
+        console.log(table.toString());
         //ask which items manager wants to add to
-    prompt.start();
+        prompt.start();
 
-    prompt.get([{
-        message: "Please enter the id of the product you'd like to add.",
-        name: "productID",
-        required: true
-    }, {
-        message: "How many would you like to add to your inventory?",
-        name: "amountAdded",
-        required: true
-    }], function(err, res) {
+        prompt.get([{
+            message: "Please enter the id of the product you'd like to add to.",
+            name: "productID",
+            required: true
+        }, {
+            message: "How much would you like to add to your inventory?",
+            name: "amountAdded",
+            required: true
+        }], function(err, res) {
             productID = res.productID;
             amount = parseInt(res.amountAdded);
             //get current stock of product and add new amount to it
@@ -115,7 +133,7 @@ function addInventory() {
                 //update new amount in database
                 connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: amount }, { item_id: productID }], function(err, res) {
                     if (err) throw err;
-                    console.log("You have successfully added items to your inventory!");
+                    console.log("You have successfully added items to your inventory!".green);
                     start();
                 });
             });
@@ -150,9 +168,7 @@ function addProduct() {
         department = result.department;
         amount = result.amount;
         price = result.price;
-        console.log("Product: " + product);
-        console.log("department: " + department + "\nAmount: " + amount + "\nPrice: " + price);
-        //insert new product into 
+        //insert new product into database
         connection.query("INSERT INTO products SET ?", {
                 product_name: product,
                 department_name: department,
@@ -161,7 +177,8 @@ function addProduct() {
             },
             function(err, res) {
                 if (err) throw err;
-                console.log("You have successfully added a new product to your inventory.");
+                console.log("You have successfully added a new product to your inventory.".green);
+                start();
             });
     });
 }

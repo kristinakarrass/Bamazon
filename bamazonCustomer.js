@@ -54,8 +54,6 @@ function start() {
         	//store input in variables for comparison
             prodId = result.product_id;
             amount = result.amount;
-            console.log("Product Id: " + prodId);
-            console.log("Amount: " + amount);
             //check if user can purchase number of items he has selected
             connection.query("SELECT * FROM products WHERE item_id=" + prodId, function(err, res) {
                 item = res[0].product_name;
@@ -66,7 +64,7 @@ function start() {
                     newStock = stock - amount;
                     price = price * amount;
                     connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newStock }, { item_id: prodId }], function(err, res) {
-                        console.log("You were charged $" + price + " for " + amount + " " + item + ".");
+                        console.log(colors.green("You were charged $" + price + " for " + amount + " " + item + "."));
                         //check if user wants to purchase another product
                         startOver();
                     })
