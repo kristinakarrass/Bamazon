@@ -55,31 +55,33 @@ function start() {
     }], function(err, answer) {
         //logs all items that are available (stock greater than 0)
         if (answer.action === "1") {
-            console.log("for sale");
             forSale();
             //logs all items with low inventory (smaller than 5)
         } else if (answer.action === "2") {
-            console.log("low inventory");
             lowInventory();
             //lets manager add inventory to any item in store
         } else if (answer.action === "3") {
-            console.log("add to inventory");
             addInventory();
             //lets manager add products to store inventory
         } else {
-            console.log("add product");
             addProduct();
         }
     });
 }
 
 function forSale() {
-    connection.query("SELECT * FROM products WHERE stock_quantity != 0", function(err, res) {
+    connection.query("SELECT * FROM products", function(err, res) {
+        if (err) throw err;
+        //print all available products in the store for manager to see
         table.push(["Item ID".yellow, "Product Name".yellow, "Price".yellow, "Stock Quantity".yellow]);
         for (var i = 0; i < res.length; i++) {
-            table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity]);
+            //mark stock quantity red for low stock and green for high stock
+            if (res[i].stock_quantity < 5) {
+                table.push([colors.cyan(res[i].item_id), res[i].product_name, res[i].price, colors.red(res[i].stock_quantity)]);
+            } else {
+                table.push([colors.cyan(res[i].item_id), res[i].product_name, res[i].price, colors.green(res[i].stock_quantity)]);
+            }
         }
-        console.log("                           ITEMS CURRENTLY IN STOCK");
         console.log(table.toString());
         start();
     });
