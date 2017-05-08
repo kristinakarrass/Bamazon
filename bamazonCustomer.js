@@ -1,5 +1,13 @@
 var mysql = require("mysql");
 var prompt = require("prompt");
+var Table = require("cli-table2");
+//create layout for cli table
+var table = new Table({
+  chars: { 'top': '═' , 'top-mid': '╤' , 'top-left': '╔' , 'top-right': '╗'
+         , 'bottom': '═' , 'bottom-mid': '╧' , 'bottom-left': '╚' , 'bottom-right': '╝'
+         , 'left': '║' , 'left-mid': '╟' , 'mid': '─' , 'mid-mid': '┼'
+         , 'right': '║' , 'right-mid': '╢' , 'middle': '│' }
+});
 var stock = 0;
 var newStock = 0;
 var amount = 0;
@@ -17,19 +25,19 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
-    console.log("connection as id " + connection.threadId);
+    start();
 });
 
 function start() {
     //get information from database
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
-        console.log("==============================================================");
+        table.push(['Item Id', 'Product', 'Price']);
         //print all available products in the store
         for (var i = 0; i < res.length; i++) {
-            console.log("Product Id: " + res[i].item_id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price);
-            console.log("==============================================================");
+        	table.push([res[i].item_id, res[i].product_name, res[i].price]);
         }
+        console.log(table.toString());
         //prompt user for input
         prompt.start();
 
@@ -89,4 +97,3 @@ function startOver() {
         }
     })
 }
-start();
