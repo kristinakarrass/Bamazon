@@ -23,3 +23,7 @@ The manager will be prompted to enter a number in order to choose from a list. S
 
 ![First Manager Screenshot](managerscreenshot1.png?raw=true "products for sale")
 
+She will then be able to choose from the same menu to see only items with low stock.
+
+![Second Manager Screenshot](managerscreenshot2.png?raw=true "low stock inventory")
+
