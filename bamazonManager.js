@@ -29,7 +29,7 @@ function start() {
     prompt.start();
 
     prompt.get([{
-        message: "Would you like to...\n1. View products for sale?\n2. View products with low inventory?\n3. Add to existing inventory?\n4. Add a new product to inventory?",
+        message: "Enter a number...\n1. View products for sale?\n2. View products with low inventory?\n3. Add to existing inventory?\n4. Add a new product to inventory?\n5. Quit.",
         name: "action",
         required: true
     }], function(err, answer) {
@@ -43,8 +43,10 @@ function start() {
         } else if (answer.action === "3") {
             addInventory();
             //lets manager add products to store inventory
-        } else {
+        } else if (answer.action === "4") {
             addProduct();
+        } else {
+        	return;
         }
     });
 }
