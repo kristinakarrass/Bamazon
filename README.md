@@ -48,7 +48,7 @@ She can also add new items to the inventory.
 * node.js
 * MySQL
 * npm packages
-		* prompt
-		* mysql
-		* cli-table2
-		* colors
+	* prompt
+	* mysql
+	* cli-table2
+	* colors
