@@ -21,6 +21,7 @@ connection.connect(function(err) {
 });
 
 function start() {
+    //get information from database
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         console.log("==============================================================");
@@ -29,6 +30,7 @@ function start() {
             console.log("Product Id: " + res[i].item_id + "\nName: " + res[i].product_name + "\nPrice: " + res[i].price);
             console.log("==============================================================");
         }
+        //prompt user for input
         prompt.start();
 
         prompt.get([{
@@ -40,23 +42,28 @@ function start() {
             name: "amount",
             required: true
         }], function(err, result) {
+        	//store input in variables for comparison
             prodId = result.product_id;
             amount = result.amount;
             console.log("Product Id: " + prodId);
             console.log("Amount: " + amount);
+            //check if user can purchase number of items he has selected
             connection.query("SELECT * FROM products WHERE item_id=" + prodId, function(err, res) {
-            	item = res[0].product_name;
+                item = res[0].product_name;
                 price = res[0].price;
                 stock = parseInt(res[0].stock_quantity);
+                //compare user's request to stock availability
                 if (stock >= amount) {
                     newStock = stock - amount;
                     price = price * amount;
-                        connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newStock }, { item_id: prodId }], function(err, res) {
-                            console.log("You were charged $" + price + " for " + amount + " " + item + ".");
-                            startOver();
-                        })
+                    connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newStock }, { item_id: prodId }], function(err, res) {
+                        console.log("You were charged $" + price + " for " + amount + " " + item + ".");
+                        //check if user wants to purchase another product
+                        startOver();
+                    })
                 } else {
                     console.log("Sorry, we do not have sufficient stock in our inventory.");
+                    //check if user wants to purchase another product
                     startOver();
                 }
             })
@@ -65,21 +72,21 @@ function start() {
 }
 
 function startOver() {
-	prompt.start();
 
-        prompt.get([{
-            message: "Would you like to purchase another product? y/n ",
-            name: "answer",
-            required: true
-        }], function(err, result) {
-        	// console.log(result.answer);
-		if (result.answer === "y") {
-			start();
-		} else {
-			console.log("Have a great day and see you again soon!");
-			return;
-		}
-	})
+    prompt.start();
+    //ask user if he wants to keep purchasing products
+    prompt.get([{
+        message: "Would you like to purchase another product? y/n ",
+        name: "answer",
+        required: true
+    }], function(err, result) {
+        // if answer is yes, run start function
+        if (result.answer === "y") {
+            start();
+        } else {
+            console.log("Have a great day and see you again soon!");
+            return;
+        }
+    })
 }
 start();
-
