@@ -66,21 +66,26 @@ function start() {
                 department = res[0].department_name;
                 //compare user's request to stock availability
                 if (stock >= amount) {
-                    console.log(department);
                     //retrieve product sales from supervisor table to update total sales for department
-                    connection.query("SELECT * FROM supervisor WHERE department_name=" + department, function(err, res) {
+                    connection.query("SELECT product_sales FROM supervisor WHERE department_name='" + department + "'", function(err, res) {
                         if(err) throw err;
-                        console.log(res);
+                        var depSales = res[0].product_sales;
                     //calculate new stock, user price and product sales total to update database
                     newStock = stock - amount;
                     price = price * amount;
                     sales += price;
-                    // connection.query("UPDATE products SET stock_quantity=" + newStock + ",product_sales=" + sales + " WHERE item_id=" + prodId, function(err, res) {
-                    //     if (err) throw err;
-                    //     console.log(colors.green("You were charged $" + price + " for " + amount + " " + item + "."));
-                    //     //check if user wants to purchase another product
-                    //     startOver();
-                    // });
+                    depSales += price;
+                    //update product sales in supervisor table
+                    connection.query("UPDATE supervisor SET product_sales=" + depSales + " WHERE department_name='" + department + "'", function(err, res) {
+                        if (err) throw err;
+                    });
+                    //update product sales, stock in products table
+                    connection.query("UPDATE products SET stock_quantity=" + newStock + ",product_sales=" + sales + ",product_sales=" + depSales +" WHERE item_id=" + prodId, function(err, res) {
+                        if (err) throw err;
+                        console.log(colors.green("You were charged $" + price + " for " + amount + " " + item + "."));
+                        //check if user wants to purchase another product
+                        startOver();
+                    });
                 });
                 } else {
                     console.log("Sorry, we do not have sufficient stock in our inventory.".red);
