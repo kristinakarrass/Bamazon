@@ -7,8 +7,17 @@ CREATE TABLE products (
     product_name VARCHAR(50) NOT NULL,
     department_name VARCHAR(50) NOT NULL,
     price INTEGER(10) NOT NULL,
-    stock_quantity INTEGER(10) NULL,
+    stock_quantity INTEGER(10),
     PRIMARY KEY(item_id)
+);
+
+CREATE TABLE supervisor(
+	department_id INT NOT NULL AUTO_INCREMENT,
+	department_name VARCHAR(50),
+	over_head_costs INT,
+	product_sales INT,
+	total_profit INT,
+	PRIMARY KEY(department_id)
 );
 
 INSERT products (product_name, department_name, price, stock_quantity)
@@ -35,3 +44,20 @@ INSERT products (product_name, department_name, price, stock_quantity)
 	VALUES ("Hidden Figures", "Movies/DVDs", 30, 150); 
 INSERT products (product_name, department_name, price, stock_quantity)
 	VALUES ("The Whole 30", "books", 40, 12);
+    
+ALTER TABLE products ADD product_sales INT(10) DEFAULT 0;
+
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("clothing", 500);
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("books", 700);
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("home improvement", 800);
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("furniture", 1000);
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("groceries", 700);
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("beauty", 400);
+INSERT supervisor (department_name, over_head_costs)
+	VALUES ("kitchen", 1200);

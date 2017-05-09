@@ -15,6 +15,7 @@ var amount = 0;
 var prodId = 0;
 var price = 0;
 var item = "";
+var sales = 0;
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -56,18 +57,22 @@ function start() {
             amount = result.amount;
             //check if user can purchase number of items he has selected
             connection.query("SELECT * FROM products WHERE item_id=" + prodId, function(err, res) {
+            	console.log(res);
                 item = res[0].product_name;
                 price = res[0].price;
                 stock = parseInt(res[0].stock_quantity);
+                sales = parseFloat(res[0].product_sales);
                 //compare user's request to stock availability
                 if (stock >= amount) {
                     newStock = stock - amount;
                     price = price * amount;
-                    connection.query("UPDATE products SET ? WHERE ?", [{ stock_quantity: newStock }, { item_id: prodId }], function(err, res) {
+                    sales += price;
+                    connection.query("UPDATE products SET stock_quantity=" + newStock + ",product_sales=" + sales + " WHERE item_id=" + prodId, function(err, res) {
+                        if (err) throw err;
                         console.log(colors.green("You were charged $" + price + " for " + amount + " " + item + "."));
                         //check if user wants to purchase another product
                         startOver();
-                    })
+                    });
                 } else {
                     console.log("Sorry, we do not have sufficient stock in our inventory.".red);
                     //check if user wants to purchase another product
