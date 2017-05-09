@@ -15,7 +15,7 @@ CREATE TABLE supervisor(
 	department_id INT NOT NULL AUTO_INCREMENT,
 	department_name VARCHAR(50),
 	over_head_costs INT,
-	product_sales INT,
+	product_sales INT DEFAULT 0,
 	total_profit INT,
 	PRIMARY KEY(department_id)
 );
