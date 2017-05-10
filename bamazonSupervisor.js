@@ -3,6 +3,7 @@ var prompt = require("prompt");
 var colors = require("colors");
 var Table = require("cli-table2");
 
+//==============================================================================================
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -15,6 +16,8 @@ connection.connect(function(err) {
     if (err) throw err;
     start();
 });
+
+//===============================================================================================
 
 function start() {
     prompt.start();
@@ -98,7 +101,10 @@ function addDep() {
                     return;
                 }
             }
-            connection.query("INSERT INTO supervisor SET ?", { department_name: department_name, over_head_costs: over_head_costs },
+            connection.query("INSERT INTO supervisor SET ?", {
+                    department_name: department_name,
+                    over_head_costs: over_head_costs
+                },
                 function(err, res) {
                     if (err) throw err;
                     console.log('You have successfully added a new department.'.green);
