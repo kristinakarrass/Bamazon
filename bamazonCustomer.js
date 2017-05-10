@@ -64,6 +64,7 @@ function start() {
                 stock = parseInt(res[0].stock_quantity);
                 sales = parseFloat(res[0].product_sales);
                 department = res[0].department_name;
+                console.log(sales);
                 //compare user's request to stock availability
                 if (stock >= amount) {
                     //retrieve product sales from supervisor table to update total sales for department
@@ -75,6 +76,7 @@ function start() {
                     price = price * amount;
                     sales += price;
                     depSales += price;
+                    console.log(sales);
                     //update product sales in supervisor table
                     connection.query("UPDATE supervisor SET product_sales=" + depSales + " WHERE department_name='" + department + "'", function(err, res) {
                         if (err) throw err;
@@ -88,6 +90,7 @@ function start() {
                     });
                 });
                 } else {
+                    //alert user about insufficient stock
                     console.log("Sorry, we do not have sufficient stock in our inventory.".red);
                     //check if user wants to purchase another product
                     startOver();

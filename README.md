@@ -41,7 +41,17 @@ She can also add new items to the inventory.
 
 ![Fourth Manager Screenshot](/screenshots/managerscreenshot4.png?raw=true "add new item to inventory")
 
+## Bamazon Supervisor
 
+The supervisor can view products sales by department and create new departments.
+
+### View Product Sales by Department
+
+![First Supervisor Screenshot](/screenshots/supervisor1.png?raw=true "view product sales by department")
+
+### Add a new department
+
+![Second Supervisor Screenshot](/screenshots/supervisor2.png?raw=true "add a new department")
 
 ### Technologies used
 		
