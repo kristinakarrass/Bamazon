@@ -82,7 +82,7 @@ function start() {
                         if (err) throw err;
                     });
                     //update product sales, stock in products table
-                    connection.query("UPDATE products SET stock_quantity=" + newStock + ",product_sales=" + sales + ",product_sales=" + depSales +" WHERE item_id=" + prodId, function(err, res) {
+                    connection.query("UPDATE products SET stock_quantity=" + newStock + ",product_sales=" + sales + " WHERE item_id=" + prodId, function(err, res) {
                         if (err) throw err;
                         console.log(colors.green("You were charged $" + price + " for " + amount + " " + item + "."));
                         //check if user wants to purchase another product
