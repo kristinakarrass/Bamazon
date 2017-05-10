@@ -51,6 +51,8 @@ The supervisor can view products sales by department and create new departments.
 
 ### View Product Sales by Department
 
+The total profit column will display profits in green and losses in red.
+
 ![First Supervisor Screenshot](/screenshots/supervisor1.png?raw=true "view product sales by department")
 
 The column for total profits is calculated and added by the code and does not exists in the database.
