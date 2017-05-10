@@ -98,7 +98,7 @@ function addDep() {
                     return;
                 }
             }
-            connection.query("INSERT into supervisor SET ?", { department_name: department_name, over_head_costs: over_head_costs },
+            connection.query("INSERT INTO supervisor SET ?", { department_name: department_name, over_head_costs: over_head_costs },
                 function(err, res) {
                     if (err) throw err;
                     console.log('You have successfully added a new department.'.green);

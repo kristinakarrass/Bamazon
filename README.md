@@ -35,11 +35,15 @@ She can then choose to add to existing inventory.
 
 ![Third Manager Screenshot](/screenshots/managerscreenshot3.png?raw=true "add to inventory")
 
+As you can see, the stock of the book The Whole 30 went out of the red numbers, which indicate low stock.
+
 ### Add new product to inventory
 
 She can also add new items to the inventory.
 
 ![Fourth Manager Screenshot](/screenshots/managerscreenshot4.png?raw=true "add new item to inventory")
+
+The new item was added at the bottom of the list.
 
 ## Bamazon Supervisor
 
@@ -48,6 +52,10 @@ The supervisor can view products sales by department and create new departments.
 ### View Product Sales by Department
 
 ![First Supervisor Screenshot](/screenshots/supervisor1.png?raw=true "view product sales by department")
+
+The column for total profits is calculated and added by the code and does not exists in the database.
+
+![MySQL database screenshot](/screenshots/supervisor3.png?raw=true "database screenshot")
 
 ### Add a new department
 
